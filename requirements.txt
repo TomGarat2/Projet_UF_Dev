@@ -1,0 +1,5 @@
+Flask
+pycryptodome
+Flask-SQLAlchemy
+flask-login
+flask-wtf
