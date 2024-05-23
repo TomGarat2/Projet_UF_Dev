@@ -5,3 +5,7 @@ Flask-WTF
 WTForms
 Werkzeug
 pycryptodome
+flask-talisman
+pyotp
+flask-limiter
+bandit

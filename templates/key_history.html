@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Key History</title>
-</head>
-<body>
-    <h1>Key History</h1>
-    <ul>
-        {% for key in keys %}
+{% extends "base.html" %}
+{% block title %}Key History{% endblock %}
+{% block content %}
+<h2>Key History</h2>
+<ul>
+    {% for key in keys %}
         <li>{{ key }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('home') }}">Back to Home</a>
-</body>
-</html>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('home') }}">Back to Home</a>
+{% endblock %}

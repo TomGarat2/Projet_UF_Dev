@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encryption Successful</title>
-</head>
-<body>
-    <h1>File Encrypted Successfully</h1>
-    <p>Your file was encrypted successfully.</p>
-    <p>Encryption Key: {{ key }}</p>
-    <a href="{{ url_for('encrypt_decrypt') }}">Back to Encrypt/Decrypt</a>
-    <a href="{{ url_for('home') }}">Home</a>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Encryption Successful{% endblock %}
+{% block content %}
+<h2>File Encrypted Successfully</h2>
+<p>Your file has been encrypted successfully.</p>
+<p>Key: {{ key }}</p>
+<a href="{{ url_for('home') }}">Back to Home</a>
+{% endblock %}

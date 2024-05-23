@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, EqualTo
+from wtforms.validators import DataRequired, Length, EqualTo, Regexp
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 from werkzeug.utils import secure_filename
@@ -12,11 +12,16 @@ from Crypto.Protocol.KDF import PBKDF2
 from base64 import b64encode, b64decode
 from datetime import datetime
 from Crypto.Random import get_random_bytes
+import pyotp
+from flask import session
+from flask_talisman import Talisman
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'une_clef_secrete_tres_securisee'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+Talisman(app)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -31,6 +36,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     keys = db.Column(db.Text, nullable=False, default='')
+    otp_secret = db.Column(db.String(16))
 
 class File(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -48,7 +54,11 @@ def load_user(user_id):
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[
+        DataRequired(),
+        Length(min=8, message='Password should be at least %(min)d characters long'),
+        Regexp(r'(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)', message='Password must contain one lowercase letter, one uppercase letter, one digit, and one special character')
+    ])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
@@ -94,10 +104,8 @@ def register():
         return redirect(url_for('home'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
@@ -231,6 +239,40 @@ def delete_file(file_id):
 def key_history():
     keys = current_user.keys.split(';') if current_user.keys else []
     return render_template('key_history.html', keys=keys)
+
+@app.route('/generate_otp')
+@login_required
+def generate_otp():
+    user = current_user
+    user.otp_secret = pyotp.random_base32()
+    db.session.commit()
+    otp_uri = pyotp.totp.TOTP(user.otp_secret).provisioning_uri(user.username, issuer_name="YourAppName")
+    return jsonify({'otp_uri': otp_uri})
+
+@app.route('/verify_otp', methods=['POST'])
+@login_required
+def verify_otp():
+    otp = request.form.get('otp')
+    if pyotp.TOTP(current_user.otp_secret).verify(otp):
+        session['otp_verified'] = True
+        return redirect(url_for('home'))
+    else:
+        flash('Invalid OTP', 'danger')
+        return redirect(url_for('login'))
+
+csp = {
+    'default-src': [
+        '\'self\'',
+        'https://trusted-cdn.com'
+    ],
+    'img-src': '*',
+    'script-src': [
+        '\'self\'',
+        'https://trusted-cdn.com'
+    ],
+}
+
+Talisman(app, content_security_policy=csp)
 
 if __name__ == '__main__':
     if os.path.exists('site.db'):

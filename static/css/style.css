@@ -1,19 +1,80 @@
-/* static/css/style.css */
 body {
+    background-color: #2E2E2E; /* Dark background */
+    color: #D3D3D3; /* Light text */
     font-family: Arial, sans-serif;
-    padding: 20px;
 }
 
-header, nav, main {
-    margin-bottom: 20px;
+header {
+    background-color: #3E3E3E; /* Slightly lighter background */
+    padding: 10px 0;
 }
 
-nav a {
-    margin-right: 15px;
+header nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: #D3D3D3;
     text-decoration: none;
-    color: #333;
+}
+
+header nav ul li a:hover {
+    color: #FFFFFF; /* White on hover */
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+h2 {
+    color: #B5B5B5; /* Light grey for headings */
+}
+
+form {
+    margin: 20px 0;
 }
 
 form div {
+    margin-bottom: 10px;
+}
+
+form label {
+    display: block;
+    color: #B5B5B5;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="file"],
+form button {
+    padding: 10px;
+    margin-top: 5px;
+    width: 100%;
+    max-width: 300px;
+}
+
+form button {
+    background-color: #4CAF50; /* Green button */
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #45A049;
+}
+
+small {
+    display: block;
+    color: #B5B5B5;
+    margin-top: -10px;
     margin-bottom: 10px;
 }

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Connexion{% endblock %}
+{% block title %}Login{% endblock %}
 {% block content %}
-<h2>Connexion</h2>
+<h2>Login</h2>
 <form method="POST" action="{{ url_for('login') }}">
     {{ form.hidden_tag() }}
     <div>
