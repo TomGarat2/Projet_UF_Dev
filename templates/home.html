@@ -1,6 +1,46 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+
+{% block title %}Accueil{% endblock %}
+
 {% block content %}
-<h2>Welcome to My App</h2>
-<p>Use the navigation menu to access different functionalities.</p>
+<div class="home-container">
+    <h1>Bienvenue sur HackEncrypt</h1>
+    <p class="intro">
+        HackEncrypt est une application web dédiée à la sécurisation de vos fichiers à travers un processus de cryptage et décryptage efficace et facile à utiliser. 
+        Cette plateforme permet aux utilisateurs de protéger leurs données sensibles avec des technologies de chiffrement avancées.
+    </p>
+    <section class="features">
+        <h2>Fonctionnalités</h2>
+        <ul>
+            <li>Cryptage de fichiers : Sécurisez vos fichiers importants en les cryptant avec une clé unique.</li>
+            <li>Décryptage de fichiers : Récupérez vos fichiers en les décryptant via la clé de cryptage originale.</li>
+            <li>Gestion des fichiers : Visualisez, téléchargez ou supprimez les fichiers cryptés et décryptés stockés sur votre compte.</li>
+            <li>Historique des clés : Suivez toutes les clés utilisées pour le cryptage de vos fichiers.</li>
+        </ul>
+    </section>
+    <section class="technologies">
+        <h2>Technologies Utilisées</h2>
+        <p>
+            Cette application a été développée en utilisant Python et Flask, avec SQLAlchemy pour la gestion des bases de données, et pycryptodome pour le cryptage des fichiers.
+        </p>
+    </section>
+    <section class="development">
+        <h2>Processus de développement et défis</h2>
+        <p>
+            La création de HackEncrypt a impliqué des phases de planification, développement et tests rigoureux, avec un focus sur la sécurité et l'efficacité.
+        </p>
+    </section>
+    <section class="about">
+        <h2>À propos</h2>
+        <p>
+            Développée par Tom Garabedian, HackEncrypt vise à simplifier la protection des données dans un monde numérique.
+        </p>
+    </section>
+    <footer>
+        <p>Contactez-nous: tom.garat@outlook.fr</p>
+        <p>© 2024 HackEncrypt</p>
+        <p>Mentions légales</p>
+    </footer>
+    
+</div>
 {% endblock %}

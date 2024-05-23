@@ -1,0 +1,76 @@
+/* Couleurs de base */
+:root {
+    --kaki-dark: #4B5320; /* Vert militaire foncé */
+    --kaki-light: #9C9F84; /* Vert militaire clair */
+    --background-dark: #33312E; /* Quasi noir pour le fond */
+    --text-light: #F4F4F4; /* Presque blanc pour le texte */
+    --accent-color: #606C38; /* Vert olive pour les accents */
+}
+
+body {
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    font-family: 'Arial', sans-serif; /* Police simple et lisible */
+}
+
+/* Navigation Bar */
+.navbar {
+    background-color: var(--kaki-dark);
+}
+
+.navbar a {
+    color: var(--text-light);
+}
+
+/* Boutons */
+.btn-primary {
+    background-color: var(--kaki-light);
+    border-color: var(--kaki-dark);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--kaki-light);
+}
+
+/* Formulaires et inputs */
+form {
+    background-color: var(--kaki-dark);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+input, textarea, select {
+    background-color: var(--background-dark);
+    color: var(--text-light);
+    border: 1px solid var(--kaki-light);
+}
+
+/* Liens */
+a {
+    color: var(--accent-color);
+}
+
+a:hover {
+    color: var(--kaki-light);
+}
+
+/* En-têtes */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--kaki-light);
+}
+
+/* Footer */
+footer {
+    background-color: var(--kaki-dark);
+    color: var(--text-light);
+    padding: 10px 0;
+    text-align: center;
+}
+
+/* Adaptations pour mobiles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+}

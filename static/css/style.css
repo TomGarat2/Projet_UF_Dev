@@ -1,80 +1,175 @@
 body {
-    background-color: #2E2E2E; /* Dark background */
-    color: #D3D3D3; /* Light text */
-    font-family: Arial, sans-serif;
+    background-color: #2E2E2E; /* Arrière-plan sombre */
+    color: #D3D3D3; /* Texte clair */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6; /* Améliore la lisibilité en augmentant l'espacement des lignes */
+    padding-bottom: 50px; /* Ajoute un peu d'espace en bas de la page */
 }
 
 header {
-    background-color: #3E3E3E; /* Slightly lighter background */
+    background-color: #404040; /* Gris foncé pour l'en-tête */
     padding: 10px 0;
+    text-align: left; /* Alignement du texte à gauche */
+    border-bottom: 2px solid #555; /* Ajoute une bordure subtile */
 }
 
 header nav ul {
     list-style: none;
     padding: 0;
-    text-align: center;
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
 }
 
 header nav ul li {
-    display: inline;
     margin: 0 15px;
 }
 
 header nav ul li a {
     color: #D3D3D3;
     text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
 }
 
-header nav ul li a:hover {
-    color: #FFFFFF; /* White on hover */
+header nav ul li a:hover, header nav ul li a:focus {
+    color: #FFFFFF;
 }
 
 main {
     padding: 20px;
+    text-align: left; /* Alignement du texte à gauche pour une meilleure lisibilité */
+    margin: 20px; /* Ajoute de la marge autour du contenu principal */
+    background: #333; /* Fond légèrement plus clair que le body pour faire ressortir le contenu */
+    border-radius: 8px; /* Adoucit les coins du conteneur principal */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Ajoute une légère ombre pour la profondeur */
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #B5B5B5; /* Gris clair pour les en-têtes */
+}
+
+p, li {
+    color: #E3E3E3; /* Texte un peu plus clair pour une meilleure lisibilité */
+    font-size: 1.1rem; /* Légère augmentation de la taille de la police */
+}
+
+ul {
+    padding-left: 20px; /* Ajoute de l'espace avant les puces pour une meilleure structure */
+}
+
+a {
+    color: #9ACD32; /* Couleur distincte pour les liens, ajustable selon vos préférences */
+}
+
+a:hover {
+    text-decoration: underline; /* Souligne les liens au survol pour une meilleure visibilité */
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #367C39; /* Vert plus foncé au survol */
+}
+
+/* Styles de base pour mobile */
+header nav ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header nav ul li {
+    width: 100%; /* Pleine largeur pour les liens sur mobile */
     text-align: center;
 }
 
-h2 {
-    color: #B5B5B5; /* Light grey for headings */
+/* Média queries pour les écrans plus grands */
+@media (min-width: 768px) {
+    header nav ul {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    header nav ul li {
+        width: auto;
+    }
 }
 
-form {
-    margin: 20px 0;
+/* Styles pour les principaux contenus pour assurer la responsivité */
+main {
+    padding: 20px;
+    overflow-x: auto; /* Assure que tout contenu trop large pour l'écran soit scrollable */
 }
 
-form div {
-    margin-bottom: 10px;
+/* Média queries pour ajuster le padding et la mise en page sur les grands écrans */
+@media (min-width: 768px) {
+    main {
+        padding: 40px;
+    }
+}
+/* Effets de transition pour les liens */
+header nav ul li a {
+    transition: color 0.3s ease, transform 0.3s ease;
 }
 
-form label {
-    display: block;
-    color: #B5B5B5;
+header nav ul li a:hover, header nav ul li a:focus {
+    color: #FFFFFF;
+    transform: scale(1.1); /* Augmente légèrement la taille au survol */
 }
 
-form input[type="text"],
-form input[type="password"],
-form input[type="file"],
+/* Animation pour les boutons */
 form button {
-    padding: 10px;
-    margin-top: 5px;
-    width: 100%;
-    max-width: 300px;
-}
-
-form button {
-    background-color: #4CAF50; /* Green button */
-    color: white;
-    border: none;
-    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 form button:hover {
     background-color: #45A049;
+    transform: translateY(-2px); /* Déplace légèrement le bouton vers le haut lorsqu'il est survolé */
 }
 
-small {
-    display: block;
-    color: #B5B5B5;
-    margin-top: -10px;
-    margin-bottom: 10px;
+/* Animation pour les éléments de formulaire lors du focus */
+form input[type="text"],
+form input[type="password"],
+form input[type="file"] {
+    transition: box-shadow 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form input[type="password"]:focus,
+form input[type="file"]:focus {
+    box-shadow: 0 0 8px #4CAF50; /* Ajoute une ombre lumineuse pour mettre en évidence */
+}
+/* Exemple pour ajuster une image dans une balise img avec une classe spécifique */
+.img-responsive {
+    width: 100%;  /* Ajuste la largeur à 100% de son conteneur */
+    height: auto; /* Garde le ratio d'aspect original */
+    max-width: 600px; /* Maximum width */
+    display: block; /* Removes extra space below the image */
+    margin: 0 auto; /* Center align if within a block */
+}
+footer {
+    background-color: #3E3E3E; /* Couleur de fond sombre pour le footer */
+    color: #D3D3D3; /* Couleur claire pour le texte */
+    text-align: center;
+    padding: 5px 20px; /* Réduction du padding pour diminuer la hauteur */
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 0.8em; /* Réduire la taille de la police */
+}
+
+footer p {
+    margin: 0; /* Enlever les marges pour compacter */
+    display: inline-block; /* Aligner en ligne */
+    padding: 0 10px; /* Espacement horizontal */
 }
