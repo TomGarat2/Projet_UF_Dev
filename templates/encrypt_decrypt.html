@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Crypter/Décrypter{% endblock %}
+{% block content %}
+<h2>Crypter un fichier</h2>
+<form method="POST" action="{{ url_for('encrypt') }}" enctype="multipart/form-data">
+    <input type="file" name="file"><br><br>
+    <input type="submit" value="Crypter">
+</form>
+<h2>Décrypter un fichier</h2>
+<form method="POST" action="{{ url_for('decrypt') }}" enctype="multipart/form-data">
+    <input type="file" name="file"><br><br>
+    <label for="key">Clé de décryptage :</label>
+    <input type="text" name="key" id="key"><br><br>
+    <input type="submit" value="Décrypter">
+</form>
+{% endblock %}

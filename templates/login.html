@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Connexion{% endblock %}
+{% block content %}
+<h2>Connexion</h2>
+<form method="POST" action="{{ url_for('login') }}">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}<br>
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}<br>
+    </div>
+    <div>
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}

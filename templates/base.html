@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Mon Application{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Application de Cryptage/Décryptage</h1>
+        <nav>
+            <ul>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                    <li><a href="{{ url_for('encrypt_decrypt') }}">Crypter/Décrypter</a></li>
+                    <li><a href="{{ url_for('list_files') }}">Mes Fichiers</a></li>
+                    <li><a href="{{ url_for('key_history') }}">Historique des clés</a></li>
+                    <li><a href="{{ url_for('logout') }}">Déconnexion</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Connexion</a></li>
+                    <li><a href="{{ url_for('register') }}">Inscription</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% if current_user.is_authenticated %}
+        <div class="user-info">
+            Connecté en tant que : <strong>{{ current_user.username }}</strong>
+        </div>
+        {% endif %}
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
