@@ -1,5 +1,7 @@
 Flask
-pycryptodome
 Flask-SQLAlchemy
-flask-login
-flask-wtf
+Flask-Login
+Flask-WTF
+WTForms
+Werkzeug
+pycryptodome
