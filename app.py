@@ -13,35 +13,46 @@ from base64 import b64encode, b64decode
 from datetime import datetime
 from Crypto.Random import get_random_bytes
 import pyotp
-from flask import session
-from flask_talisman import Talisman
+from flask import session, current_app
 from flask_mail import Mail, Message
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+from itsdangerous import URLSafeTimedSerializer as Serializer
+from flask_talisman import Talisman
+from Crypto.Cipher import AES
+from Crypto.Protocol.KDF import PBKDF2
+from base64 import b64encode, b64decode
+from Crypto.Random import get_random_bytes
+import os
 
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'une_clef_secrete_tres_securisee'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Configuration Flask-Mail
-app.config['MAIL_SERVER'] = 'smtp.example.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'your_email@example.com'
-app.config['MAIL_PASSWORD'] = 'your_password'
-
-mail = Mail(app)
-s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-
-Talisman(app)
-
-db = SQLAlchemy(app)
-login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+db = SQLAlchemy()
+login_manager = LoginManager()
+mail = Mail()
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+def create_app():
+    app = Flask(__name__)
+    app.config['SECRET_KEY'] = 'une_clef_secrete_tres_securisee'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'your_email@example.com'
+    app.config['MAIL_PASSWORD'] = 'your_password'
+
+    Talisman(app)
+
+    db.init_app(app)
+    login_manager.init_app(app)
+    mail.init_app(app)
+
+    login_manager.login_view = 'login'
+
+    return app
+
+app = create_app()
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -51,6 +62,19 @@ class User(UserMixin, db.Model):
     keys = db.Column(db.Text, nullable=False, default='')
     otp_secret = db.Column(db.String(16))
     role = db.Column(db.String(10), default='user')
+
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(current_app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
 
 class File(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -68,7 +92,7 @@ def load_user(user_id):
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=20)])
-    email = StringField('Email', validators=[DataRequired(), Length(min=6, max=120)])
+    email = StringField('Email', validators=[DataRequired(), Length(min=6, max=50)])
     password = PasswordField('Password', validators=[
         DataRequired(),
         Length(min=8, message='Password should be at least %(min)d characters long'),
@@ -83,17 +107,28 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 class RequestResetForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Length(min=6, max=120)])
+    email = StringField('Email', validators=[DataRequired(), Length(min=6, max=50)])
     submit = SubmitField('Request Password Reset')
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField('Password', validators=[
-        DataRequired(),
-        Length(min=8, message='Password should be at least %(min)d characters long'),
-        Regexp(r'(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)', message='Password must contain one lowercase letter, one uppercase letter, one digit, and one special character')
-    ])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=8), Regexp(
+        r'(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)',
+        message='Password must contain one lowercase letter, one uppercase letter, one digit, and one special character'
+    )])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
+
+def send_reset_email(user):
+    token = user.get_reset_token()
+    msg = Message('Password Reset Request',
+                  sender='noreply@demo.com',
+                  recipients=[user.email])
+    msg.body = f'''To reset your password, visit the following link:
+{url_for('reset_token', token=token, _external=True)}
+
+If you did not make this request then simply ignore this email and no changes will be made.
+'''
+    mail.send(msg)
 
 def encrypt_key(key):
     master_key = os.environ.get('MASTER_KEY', 'your_master_key_here').encode()
@@ -109,7 +144,7 @@ def decrypt_key(encrypted_key):
     data = b64decode(encrypted_key)
     salt, nonce, tag, ciphertext = data[:16], data[16:32], data[32:48], data[48:]
     kdf = PBKDF2(master_key, salt, dkLen=32, count=100000)
-    cipher = AES.new(kdf,AES.MODE_EAX, nonce=nonce)
+    cipher = AES.new(kdf, AES.MODE_EAX, nonce=nonce)
     decrypted_key = cipher.decrypt_and_verify(ciphertext, tag).decode('utf-8')
     return decrypted_key
 
@@ -123,9 +158,9 @@ def register():
         if user is not None:
             flash('Username already taken. Please choose a different one.', 'danger')
             return render_template('register.html', title='Register', form=form)
-        email_user = User.query.filter_by(email=form.email.data).first()
-        if email_user is not None:
-            flash('Email already registered. Please use a different one.', 'danger')
+        user = User.query.filter_by(email=form.email.data).first()
+        if user is not None:
+            flash('Email already registered. Please use a different email.', 'danger')
             return render_template('register.html', title='Register', form=form)
         hashed_password = generate_password_hash(form.password.data)
         user = User(username=form.username.data, email=form.email.data, password=hashed_password, keys='')
@@ -293,49 +328,34 @@ def verify_otp():
         return redirect(url_for('login'))
 
 @app.route('/reset_password_request', methods=['GET', 'POST'])
-def reset_password_request():
+def reset_request():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            token = s.dumps(user.email, salt='email-reset')
-            msg = Message('Password Reset Request', sender='noreply@example.com', recipients=[user.email])
-            link = url_for('reset_password_token', token=token, _external=True)
-            msg.body = f'Your link to reset your password is {link}. If you did not request this, please ignore this email.'
-            mail.send(msg)
-            flash('An email has been sent with instructions to reset your password.', 'info')
-            return redirect(url_for('login'))
-        else:
-            flash('Email not found. Please check and try again.', 'danger')
-    return render_template('reset_password_request.html', title='Reset Password', form=form)
+            send_reset_email(user)
+        flash('An email has been sent with instructions to reset your password.', 'info')
+        return redirect(url_for('login'))
+    return render_template('reset_request.html', title='Reset Password', form=form)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password_token(token):
-    try:
-        email = s.loads(token, salt='email-reset', max_age=3600)
-    except SignatureExpired:
-        flash('The token is expired. Please try again.', 'danger')
-        return redirect(url_for('reset_password_request'))
+def reset_token(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    user = User.verify_reset_token(token)
+    if not user:
+        flash('That is an invalid or expired token', 'warning')
+        return redirect(url_for('reset_request'))
     form = ResetPasswordForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=email).first_or_404()
         hashed_password = generate_password_hash(form.password.data)
         user.password = hashed_password
         db.session.commit()
-        flash('Your password has been reset. You can now log in.', 'success')
+        flash('Your password has been updated! You are now able to log in', 'success')
         return redirect(url_for('login'))
-    return render_template('reset_password.html', title='Reset Password', form=form)
-
-@app.route('/admin/users')
-@login_required
-def admin_users():
-    if current_user.role != 'admin':
-        flash('Unauthorized access.', 'danger')
-        return redirect(url_for('home'))
-    users = User.query.all()
-    return render_template('admin_users.html', users=users)
+    return render_template('reset_token.html', title='Reset Password', form=form)
 
 csp = {
     'default-src': [
@@ -350,7 +370,6 @@ csp = {
 }
 
 Talisman(app, content_security_policy=csp)
-
 
 if __name__ == '__main__':
     if os.path.exists('site.db'):

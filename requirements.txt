@@ -8,4 +8,5 @@ pycryptodome
 flask-talisman
 pyotp
 flask-limiter
-itsdangerous
+Flask-Mail
+bandit
