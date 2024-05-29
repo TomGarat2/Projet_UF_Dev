@@ -1,0 +1,90 @@
+Rétroplanning pour le Projet HackEncrypt :
+
+Semaine 1-2 : 
+Phase de Planification et de Conception
+
+Jour 1-3 : 
+Définition des objectifs du projet
+Déterminer les fonctionnalités clés de l'application (cryptage/décryptage de fichiers, gestion des utilisateurs, etc.).
+Identifier les technologies à utiliser (Python, Flask, SQLAlchemy, etc.).
+
+Jour 4-7 : 
+Conception de l'architecture du projet
+Concevoir la structure de la base de données.
+Définir les routes et les vues de l'application Flask.
+Élaborer des schémas pour l'interface utilisateur.
+
+Jour 8-10 : 
+Création du dépôt de code et configuration initiale
+Initialiser le dépôt Git et configurer le projet.
+Créer et configurer l'environnement virtuel Python.
+Mettre en place la structure de base du projet (dossiers, fichiers initiaux, etc.).
+
+Semaine 3-4 : 
+Développement des Fonctionnalités de Base
+
+Jour 11-15 : 
+Développement des fonctionnalités d'inscription et de connexion
+Créer les modèles SQLAlchemy pour les utilisateurs.
+Mettre en place les formulaires Flask-WTF pour l'inscription et la connexion.
+Implémenter les routes et les vues associées.
+
+Jour 16-20 : 
+Cryptage et décryptage des fichiers
+Développer les fonctions de cryptage et de décryptage utilisant pycryptodome.
+Créer les formulaires et les vues pour le cryptage et le décryptage de fichiers.
+Tester le cryptage et le décryptage avec des fichiers de différents formats et tailles.
+
+Jour 21-25 : 
+Gestion des fichiers et historique des clés
+Implémenter la fonctionnalité de gestion des fichiers (téléchargement, visualisation, suppression).
+Développer la fonctionnalité pour afficher l'historique des clés de cryptage.
+Tester la gestion des fichiers et l'historique des clés.
+
+Semaine 5-6 : 
+Sécurité et Gestion des Utilisateurs
+
+Jour 26-30 : 
+Ajout de fonctionnalités de sécurité
+Implémenter l'authentification à deux facteurs (2FA) avec pyotp.
+Ajouter la gestion des rôles (admin, utilisateur régulier) dans la base de données.
+Tester les fonctionnalités de sécurité.
+
+Jour 31-35 : 
+Réinitialisation de mot de passe via email
+Configurer Flask-Mail pour l'envoi d'emails.
+Développer les formulaires et les vues pour la réinitialisation de mot de passe.
+Tester la réinitialisation de mot de passe avec différents scénarios.
+
+Semaine 7-8 : 
+Améliorations et Tests
+
+Jour 36-40 : 
+Améliorations de l'interface utilisateur
+Appliquer des styles CSS pour améliorer l'interface utilisateur.
+Ajouter des animations et des transitions pour une meilleure expérience utilisateur.
+Tester l'interface sur différents navigateurs et appareils.
+
+Jour 41-45 : 
+Tests et débogage
+Effectuer des tests unitaires et des tests d'intégration.
+Corriger les bugs et optimiser le code.
+Tester la sécurité de l'application (XSS, CSRF, etc.).
+
+Semaine 9 : 
+Documentation et Déploiement
+
+Jour 46-50 : 
+Finalisation de la documentation
+Mettre à jour la documentation du projet (README, guides utilisateur, etc.).
+
+Semaine 10 : 
+Révisions et Livrables
+
+Jour 56-60 : 
+Révisions finales
+Réviser l'ensemble du projet et s'assurer que toutes les fonctionnalités sont implémentées.
+Préparer la présentation du projet.
+
+Conclusion
+Ce rétroplanning permet de structurer le développement du projet HackEncrypt en différentes phases et étapes, garantissant une progression fluide et organisée vers l'atteinte des objectifs fixés.

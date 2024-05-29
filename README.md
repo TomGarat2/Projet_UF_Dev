@@ -1,15 +1,15 @@
-# Projet de Crypteur/Décrypteur de Fichiers - HackEncrypt
+# Projet de Crypteur/Décrypteur de Fichiers
 
 ## Description
-HackEncrypt est une application web qui permet de crypter et décrypter des fichiers afin de protéger des données sensibles. L'application utilise Python et Flask, accompagnés de diverses bibliothèques de cryptographie. Les utilisateurs peuvent s'inscrire, se connecter, gérer leurs fichiers et visualiser l'historique des clés de cryptage utilisées. L'application comprend également des fonctionnalités avancées de gestion des utilisateurs et de sécurité.
+HackEncrypt est une application web dédiée à la sécurisation de vos fichiers à travers un processus de cryptage et décryptage efficace et facile à utiliser. Cette plateforme permet aux utilisateurs de protéger leurs données sensibles avec des technologies de chiffrement avancées.
 
 ## Fonctionnalités
 - **Inscription et connexion des utilisateurs**
 - **Cryptage et décryptage de fichiers**
 - **Gestion des fichiers cryptés et décryptés**
 - **Historique des clés de cryptage utilisées**
-- **Réinitialisation de mot de passe via e-mail sécurisé**
-- **Rôles d'utilisateurs (admin, utilisateur régulier)**
+- **Réinitialisation de mot de passe via email**
+- **Gestion des rôles d'utilisateurs (Admin et Utilisateur régulier)**
 - **Interface utilisateur intuitive et sécurisée**
 
 ## Technologies Utilisées
@@ -21,9 +21,25 @@ HackEncrypt est une application web qui permet de crypter et décrypter des fich
 - pycryptodome
 - Flask-Mail
 - Flask-Talisman
-- Flask-Limiter
-- pyotp
 - HTML/CSS/JavaScript
+
+## Pourquoi ces technologies ?
+
+- Python : Choisi pour sa simplicité, sa lisibilité et son large écosystème de bibliothèques qui facilitent le développement rapide d'applications robustes.
+
+- Flask : Un micro-framework léger et flexible qui permet une grande liberté dans la conception de l'application. Idéal pour des projets de taille moyenne où l'on souhaite éviter la complexité des frameworks plus lourds.
+
+- SQLAlchemy : Une ORM puissante pour Python qui simplifie l'interaction avec la base de données et permet une gestion propre et structurée des données.
+
+- Flask-Login : Pour la gestion de l'authentification des utilisateurs, offrant des fonctionnalités essentielles comme la gestion des sessions utilisateur.
+
+- Flask-WTF : Pour la gestion et la validation des formulaires web, simplifiant le traitement des entrées utilisateur.
+pycryptodome : Bibliothèque de cryptographie moderne et complète, permettant de mettre en œuvre des algorithmes de cryptage robustes comme AES.
+
+- HTML/CSS/JavaScript : Pour créer une interface utilisateur attrayante et interactive, en utilisant des technologies web standards.
+
+- Flask-Mail : Pour l'envoi d'emails, notamment pour les fonctionnalités de réinitialisation de mot de passe.
+
 
 ## Prérequis
 - Python 3.x
@@ -32,9 +48,10 @@ HackEncrypt est une application web qui permet de crypter et décrypter des fich
 ## Installation
 
 ### Cloner le Répertoire du Projet
-```bash
+```sh
 git clone <URL_DE_VOTRE_DEPOT>
 cd <NOM_DU_REPERTOIRE_DU_PROJET>
+
 
 Créer un Environnement Virtuel
 
@@ -64,6 +81,10 @@ Résolution des Problèmes Courants
 Dépendances Manquantes ou Versions Incorrectes
 Vérifiez le fichier requirements.txt et réinstallez les dépendances :
 pip install -r requirements.txt
+
+Gestion des Rôles d'Utilisateurs:
+Pour promouvoir un utilisateur en administrateur, utilisez le script make_admin.py :
+python make_admin.py <username>
 
 Problèmes de Base de Données
 Supprimez l'ancienne base de données (si nécessaire) et recréez-la :
